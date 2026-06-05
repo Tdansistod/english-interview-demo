@@ -1,0 +1,26 @@
+{
+  "name": "english-practice",
+  "version": "1.0.0",
+  "description": "AI-powered English interview practice — Spanish natives practice answers, get grammar corrections, vocabulary, and naturalness feedback via the MiniMax API (OpenAI-compatible).",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node --env-file=.env server.js",
+    "dev": "node --env-file=.env server.js"
+  },
+  "keywords": [
+    "english",
+    "interview",
+    "practice",
+    "tutor",
+    "minimax",
+    "openai-compatible",
+    "ai"
+  ],
+  "author": "Lautaro Waltersdorf",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "openai": "^6.42.0"
+  }
+}

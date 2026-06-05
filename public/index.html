@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Practice — AI Interview Tutor</title>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span class="brand-name">English Practice</span>
+      </div>
+      <button id="history-btn" class="ghost-btn">Past sessions</button>
+    </header>
+
+    <main id="app">
+      <!-- ============ SETUP ============ -->
+      <section id="view-setup" class="view active">
+        <div class="hero">
+          <p class="eyebrow">AI English tutor · powered by AI</p>
+          <h1>Speak like you'll be interviewed in English.</h1>
+          <p class="lede">
+            Pick a question, write your answer, and get specific feedback:
+            grammar, vocabulary, clarity, naturalness — plus a polished
+            rewrite. Built for Spanish natives prepping for web-dev
+            interviews.
+          </p>
+        </div>
+
+        <div class="setup-card">
+          <div class="field">
+            <label>Question</label>
+            <div id="category-grid" class="chip-grid"></div>
+          </div>
+
+          <div id="custom-prompt-wrap" class="field hidden">
+            <label for="custom-prompt">Your custom prompt</label>
+            <input
+              id="custom-prompt"
+              class="text-input"
+              type="text"
+              placeholder="e.g. Describe a time you disagreed with a teammate."
+            />
+          </div>
+
+          <button id="start-btn" class="primary-btn">Start practicing →</button>
+        </div>
+      </section>
+
+      <!-- ============ PRACTICE ============ -->
+      <section id="view-practice" class="view">
+        <div class="prompt-card">
+          <p class="prompt-label">Prompt</p>
+          <p id="prompt-text" class="prompt-text"></p>
+        </div>
+
+        <label class="answer-label" for="answer-input">Your answer</label>
+        <textarea
+          id="answer-input"
+          class="text-area"
+          placeholder="Write your answer in English. Don't worry about being perfect — that's what the feedback is for."
+        ></textarea>
+
+        <div class="practice-actions">
+          <button id="back-btn" class="ghost-btn">← Change question</button>
+          <button id="submit-btn" class="primary-btn">Get feedback</button>
+        </div>
+
+        <div id="practice-loading" class="loading hidden">
+          <span class="spinner"></span> Reviewing your answer…
+        </div>
+
+        <!-- feedback appears after submit -->
+        <div id="feedback-panel" class="feedback-panel hidden"></div>
+      </section>
+
+      <!-- ============ HISTORY LIST ============ -->
+      <section id="view-history" class="view">
+        <div class="history-head">
+          <h2>Past sessions</h2>
+          <button id="back-from-history" class="ghost-btn">← Back</button>
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+
+      <!-- ============ HISTORY DETAIL ============ -->
+      <section id="view-detail" class="view">
+        <div class="detail-head">
+          <h2 id="detail-title">Session</h2>
+          <button id="back-from-detail" class="ghost-btn">← Back</button>
+        </div>
+        <div class="detail-meta">
+          <span id="detail-category" class="tag"></span>
+          <span id="detail-date" class="tag subtle"></span>
+          <span id="detail-overall" class="tag score"></span>
+        </div>
+        <p class="answer-label">Your original answer</p>
+        <div id="detail-original" class="original-text"></div>
+        <div id="detail-feedback"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
