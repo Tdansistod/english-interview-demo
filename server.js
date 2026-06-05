@@ -15,6 +15,13 @@ const FAST_MODEL = process.env.MINIMAX_FAST_MODEL || "MiniMax-M2.5-highspeed";
 const API_KEY = process.env.MINIMAX_API_KEY;
 const SESSIONS_DIR = path.join(__dirname, "sessions");
 
+// Demo mode = rate limiting is active. Detected per-request: localhost = unrestricted dev mode;
+// any other host (Railway, real domain, tunnel) = demo mode.
+const isDemo = (req) =>
+  req && req.get("host") &&
+  !req.get("host").includes("localhost") &&
+  !req.get("host").includes("127.0.0.1");
+
 // --- Boot checks -----------------------------------------------------------
 
 if (!API_KEY) {
@@ -196,6 +203,7 @@ function getClientIp(req) {
 }
 
 function rateLimit(req, res, next) {
+  if (!isDemo(req)) return next();
   const ip = getClientIp(req);
   const now = Date.now();
   const recent = (rateBuckets.get(ip) || []).filter(
