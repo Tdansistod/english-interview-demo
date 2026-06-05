@@ -25,7 +25,7 @@ For every answer you write, the tutor returns:
 
 - **Backend:** Node.js, Express
 - **Frontend:** Vanilla HTML/CSS/JS (no framework)
-- **AI:** MiniMax (OpenAI-compatible) via the official `openai` SDK
+- **AI:** Any OpenAI-compatible provider (MiniMax, OpenAI, Groq, etc.) via the official `openai` SDK
 - **Storage:** Local JSON files in `sessions/`
 
 ## Setup
@@ -35,7 +35,7 @@ git clone <this-repo>
 cd english-practice
 npm install
 cp .env.example .env
-# Edit .env and add your MINIMAX_API_KEY
+# Edit .env and add your OPENAI_API_KEY (any OpenAI-compatible provider: MiniMax, OpenAI, Groq, etc.)
 npm run dev
 ```
 
@@ -45,7 +45,7 @@ Then open <http://localhost:3001>.
 
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
-| `MINIMAX_API_KEY` | Yes | — | Your MiniMax API key |
+| `OPENAI_API_KEY` | Yes | — | Any OpenAI-compatible API key (MiniMax, OpenAI, Groq, etc.) |
 | `MINIMAX_BASE_URL` | No | `https://api.minimax.io/v1` | Override the API base URL |
 | `MINIMAX_MODEL` | No | `MiniMax-M3` | Reasoning model |
 | `MINIMAX_FAST_MODEL` | No | `MiniMax-M2.5-highspeed` | Model used for feedback calls |

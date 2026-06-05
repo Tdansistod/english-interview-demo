@@ -9,10 +9,10 @@ const { CATEGORIES } = require("./categories");
 
 const PORT = process.env.PORT || 3001;
 // MiniMax is OpenAI-compatible. Defaults below can be overridden via .env.
-const BASE_URL = process.env.MINIMAX_BASE_URL || "https://api.minimax.io/v1";
-const MODEL = process.env.MINIMAX_MODEL || "MiniMax-M3";
-const FAST_MODEL = process.env.MINIMAX_FAST_MODEL || "MiniMax-M2.5-highspeed";
-const API_KEY = process.env.MINIMAX_API_KEY;
+const BASE_URL = process.env.OPENAI_BASE_URL || "https://api.minimax.io/v1";
+const MODEL = process.env.OPENAI_MODEL || "MiniMax-M3";
+const FAST_MODEL = process.env.OPENAI_FAST_MODEL || "MiniMax-M2.5-highspeed";
+const API_KEY = process.env.OPENAI_API_KEY;
 const SESSIONS_DIR = path.join(__dirname, "sessions");
 
 // Demo mode = rate limiting is active. Detected per-request: localhost = unrestricted dev mode;
@@ -26,9 +26,9 @@ const isDemo = (req) =>
 
 if (!API_KEY) {
   console.error(
-    "\n[english-practice] MINIMAX_API_KEY is not set.\n" +
+    "\n[english-practice] OPENAI_API_KEY is not set.\n" +
       "Copy .env.example to .env and add your key, or export it in your shell:\n" +
-      "  export MINIMAX_API_KEY=your_key_here\n",
+      "  export OPENAI_API_KEY=your_key_here\n",
   );
   process.exit(1);
 }
