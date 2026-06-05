@@ -1,90 +1,79 @@
 # English Practice — AI Interview Tutor
 
-A focused practice app for a Spanish native prepping for English web-dev
-interviews. Pick a question, write an answer, get a structured review:
-**grammar**, **vocabulary**, **clarity**, **naturalness** — plus a list of
-specific corrections and a polished rewrite. Every exchange is saved as
-JSON and is browsable from the history view.
+An AI-powered English interview practice tool built for Spanish-speaking developers preparing for web-dev jobs in the US and Canada. Pick a question, write your answer, and get specific feedback on grammar, vocabulary, clarity, and naturalness — plus a polished rewrite of what you should have said.
 
 ## What it does
 
-1. **Pick a question** — interview prompts: "Tell me about yourself",
-   "Biggest weakness", "Biggest strength", "Why this company", "Where do
-   you see yourself in 5 years", "Tell me about a project", "Tell me
-   about a challenge", "Any questions for me", plus a freeform
-   "Custom prompt" option.
-2. **Write your answer** — big text area, submit.
-3. **Get AI feedback** — the model scores the answer on four axes, lists
-   each correction with a short explanation, rewrites the whole answer in
-   natural interview English, and gives tips for next time.
-4. **Browse history** — every exchange is saved to `sessions/` and is
-   browsable from the UI.
+Practicing interview English with a generic chatbot produces vague feedback. This tool is tuned for the exact failure modes Spanish natives hit in technical interviews: subject-verb agreement, false friends, missing articles, preposition errors, literal translations, tense mismatches, missing third-person `-s`, adjective order, and run-on sentences.
 
-## Tech
+For every answer you write, the tutor returns:
 
-- **Frontend:** vanilla HTML / CSS / JS — no framework, no build step.
-  Warm dark theme with a rust/amber accent, Fraunces + JetBrains Mono.
-- **Backend:** Node.js + Express.
-- **AI:** the official OpenAI SDK (`openai`) pointed at MiniMax's
-  OpenAI-compatible endpoint (`https://api.minimax.io/v1`), calling
-  `MiniMax-M2.5-highspeed` for feedback. The shared tutor system prompt
-  is sent on every request and responses use JSON mode
-  (`response_format: json_object`); since the model may emit `<think>`
-  blocks, the server strips them and code fences before parsing the
-  JSON.
+- **Four scored axes** (1–5): grammar, vocabulary, clarity, naturalness — plus an overall score
+- **Specific corrections** with the original phrase, the fix, and a one-line explanation
+- **An improved version** of your full answer in natural interview English
+- **Actionable tips** for the next round
 
-## Running it
+## Features
 
-Requirements: Node.js 20+ (for the native `--env-file` flag) and a
-MiniMax API key.
+- **Curated question bank** — eight common interview prompts (Tell me about yourself, biggest weakness, biggest strength, why this company, where do you see yourself in 5 years, a project you're proud of, a technical challenge, do you have any questions for me) plus a custom-prompt mode for anything else
+- **Persisted history** — every session is saved locally as JSON; browse, revisit, and review past answers from the UI
+- **Reasoning-model safe** — handles `<think>` blocks and markdown fences that MiniMax-M3 occasionally wraps around its JSON output
+- **Demo-mode rate limiting** — per-IP rolling 60-second window (5 requests max) auto-enabled whenever the app is served from anything other than localhost, so a public deployment won't burn through API credits
+- **No build step** — vanilla HTML/CSS/JS frontend, Express backend, OpenAI-compatible client
+
+## Tech stack
+
+- **Backend:** Node.js, Express
+- **Frontend:** Vanilla HTML/CSS/JS (no framework)
+- **AI:** MiniMax (OpenAI-compatible) via the official `openai` SDK
+- **Storage:** Local JSON files in `sessions/`
+
+## Setup
 
 ```bash
-# 1. Install dependencies
+git clone <this-repo>
+cd english-practice
 npm install
-
-# 2. Provide your API key
-cp .env.example .env        # then edit .env and set MINIMAX_API_KEY
-
-# 3. Start (npm scripts load .env automatically via --env-file)
-npm start
+cp .env.example .env
+# Edit .env and add your MINIMAX_API_KEY
+npm run dev
 ```
 
-Then open **http://localhost:3001**.
+Then open <http://localhost:3001>.
 
-> The npm `start`/`dev` scripts run `node --env-file=.env server.js`,
-> so the `.env` file is loaded automatically. The server reads
-> `process.env.MINIMAX_API_KEY` and refuses to start without it. If you
-> run `node server.js` directly, export the variable in your shell
-> first.
+### Environment variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `MINIMAX_API_KEY` | Yes | — | Your MiniMax API key |
+| `MINIMAX_BASE_URL` | No | `https://api.minimax.io/v1` | Override the API base URL |
+| `MINIMAX_MODEL` | No | `MiniMax-M3` | Reasoning model |
+| `MINIMAX_FAST_MODEL` | No | `MiniMax-M2.5-highspeed` | Model used for feedback calls |
+| `PORT` | No | `3001` | HTTP port |
+
+## API
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/api/categories` | List of question categories |
+| `POST` | `/api/feedback` | Submit an answer, receive scored feedback |
+| `GET` | `/api/history` | List of past sessions |
+| `GET` | `/api/history/:id` | Fetch a single past session |
 
 ## Project structure
 
 ```
 english-practice/
-├── server.js          # Express server: /api/feedback, /api/history
-├── categories.js      # Hardcoded prompt bank
-├── package.json
-├── .env.example       # MINIMAX_API_KEY=your_key_here
+├── server.js          # Express app, AI feedback pipeline, rate limiter
+├── categories.js      # Question bank
 ├── public/
-│   ├── index.html     # Single-page app
-│   ├── style.css      # Warm dark + rust/amber theme
-│   └── app.js         # All client logic (dependency-free)
-└── sessions/          # Saved exchanges as JSON (created automatically)
+│   ├── index.html     # Single-page UI
+│   ├── app.js         # Frontend logic
+│   └── style.css      # Styling
+├── sessions/          # Persisted session JSON
+└── .env.example       # Config template
 ```
 
-## API endpoints
+## License
 
-| Method | Route               | Purpose                                  |
-| ------ | ------------------- | ---------------------------------------- |
-| GET    | `/api/categories`   | List available prompts                   |
-| POST   | `/api/feedback`     | Score an answer, return + save feedback  |
-| GET    | `/api/history`      | List saved exchanges                     |
-| GET    | `/api/history/:id`  | Fetch one saved exchange                 |
-
-## Notes
-
-- The API key is **only** read from the environment — it is never
-  hardcoded or sent to the browser.
-- The `sessions/` folder is created automatically on first run.
-- The prompt bank in `categories.js` is easy to extend — add entries
-  to the `CATEGORIES` array.
+MIT
